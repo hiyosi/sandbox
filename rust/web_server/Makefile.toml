@@ -1,0 +1,20 @@
+[tasks.dev]
+command = "cargo"
+args = ["watch", "-x", "run -- --host 0.0.0.0 --port 3000"]
+
+[tasks.test-watch]
+command = "cargo"
+args = ["watch", "-x", "test"]
+
+[tasks.build-release]
+command = "cargo"
+args = ["build", "--release"]
+
+[tasks.gen-keys]
+command = "./hack/gen_ec256_keys.py"
+
+[tasks.gen-jwt]
+command = "./hack/generate_jwt.py"
+args = []
+
+
