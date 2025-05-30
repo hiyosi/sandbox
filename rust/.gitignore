@@ -1,0 +1,50 @@
+# コンパイル時の生成物
+/target/
+
+# rustfmtのバックアップファイル
+**/*.rs.bk
+
+# 実行可能ファイル（Windows）
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# デバッグシンボル
+*.pdb
+
+# IDEの設定ファイル
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Cargoのロックファイル（チームプロジェクトでは通常コミットする）
+# Cargo.lock
+
+# ローカル設定
+.env
+.env.local
+.env.*.local
+
+# ログファイル
+*.log
+
+# クラッシュログ
+*.stackdump
+
+# Rustのプロファイリングとトレース
+*.profraw
+flamegraph.svg
+perf.data
+perf.data.old
+
+# macOS固有のファイル
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows固有のファイル
+Thumbs.db
+Desktop.inip
