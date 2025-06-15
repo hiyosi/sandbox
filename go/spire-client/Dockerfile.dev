@@ -1,0 +1,24 @@
+FROM golang:1.23-bookworm
+
+# Install required packages
+RUN apt-get update && apt-get install -y \
+    curl \
+    unzip \
+    git \
+    build-essential \
+    ca-certificates \
+    libssl-dev \
+    openssl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create workspace
+WORKDIR /workspace
+
+# Install Go tools with proper CGO settings
+ENV CGO_ENABLED=1
+RUN go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
+
+# Set up Git safe directory (for mounted volumes)
+RUN git config --global --add safe.directory /workspace
+
+CMD ["/bin/bash"]

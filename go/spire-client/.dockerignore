@@ -1,0 +1,25 @@
+# Git files
+.git
+.gitignore
+
+# Go build artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# IDE files
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Development artifacts
+.dev-image
