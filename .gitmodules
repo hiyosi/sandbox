@@ -1,0 +1,3 @@
+[submodule "rust/spire-client/proto/spire-api-sdk"]
+	path = rust/spire-client/proto/spire-api-sdk
+	url = https://github.com/spiffe/spire-api-sdk.git
