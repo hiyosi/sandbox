@@ -1,0 +1,30 @@
+datastore:
+  engine: sqlite
+  uri: "file:/opt/openfga/data/openfga.db?_fk=1"
+
+grpc:
+  addr: 0.0.0.0:28443
+  tls:
+    enabled: true
+    cert: /opt/openfga/certs/openfga-server.crt
+    key: /opt/openfga/certs/openfga-server.key
+
+http:
+  enabled: true
+  addr: 0.0.0.0:18443
+  tls:
+    enabled: true
+    cert: /opt/openfga/certs/openfga-http.crt
+    key: /opt/openfga/certs/openfga-http.key
+
+authn:
+  method: oidc
+  oidc:
+    issuer: "https://oidc-discovery-provider:8443"
+    audience: "openfga"
+
+log:
+  level: debug
+
+playground:
+  enabled: false
