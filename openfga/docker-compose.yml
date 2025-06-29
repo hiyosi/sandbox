@@ -1,0 +1,115 @@
+version: '3.8'
+
+services:
+  spire-server:
+    image: ghcr.io/spiffe/spire-server:1.12.3
+    container_name: spire-server
+    hostname: spire-server
+    user: "0:0"
+    volumes:
+      - ./spire-config/server:/opt/spire/conf/server
+      - ./certs:/opt/spire/certs:ro
+      - spire-data:/opt/spire/data
+      - spire-server-socket:/tmp/spire-server
+    command: ["-config", "/opt/spire/conf/server/server.conf"]
+    ports:
+      - "8081:8081"
+      - "8080:8080"  # Health check
+    networks:
+      - spire-net
+
+  # SPIRE Agent と Client を同じコンテナで実行する準備
+  # 現在は別々にして、後でClientをビルドしてから統合
+  spire-agent:
+    image: ghcr.io/spiffe/spire-agent:1.12.3
+    container_name: spire-agent
+    hostname: spire-agent
+    user: "0:0"
+    depends_on:
+      - spire-server
+    volumes:
+      - ./spire-config/agent:/opt/spire/conf/agent
+      - spire-data:/opt/spire/data
+      - spire-agent-socket:/tmp/spire-agent
+    command: ["-config", "/opt/spire/conf/agent/agent.conf", "-joinToken", "${JOIN_TOKEN}"]
+    ports:
+      - "8082:8082"  # Health check
+    environment:
+      - JOIN_TOKEN=${JOIN_TOKEN}
+    networks:
+      - spire-net
+
+  oidc-discovery-provider:
+    image: ghcr.io/spiffe/oidc-discovery-provider:1.12.3
+    container_name: oidc-discovery-provider
+    hostname: spire-server
+    user: "0:0"
+    depends_on:
+      - spire-server
+    volumes:
+      - ./spire-config/oidc-discovery-provider.conf:/opt/spire/conf/oidc-discovery-provider.conf:ro
+      - ./certs:/opt/spire/certs:ro
+      - spire-data:/opt/spire/data
+      - spire-server-socket:/tmp/spire-server
+    command: ["-config", "/opt/spire/conf/oidc-discovery-provider.conf"]
+    ports:
+      - "8443:8443"
+      - "8084:8080"  # Health check
+    networks:
+      - spire-net
+
+  openfga:
+    image: openfga/openfga:v1.8.16
+    # image: openfga:debug
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    container_name: openfga
+    hostname: openfga
+    depends_on:
+      - oidc-discovery-provider
+    user: "0:0"  # rootユーザーで実行
+    volumes:
+      - ./openfga-config/config.yaml:/etc/openfga/config.yaml:ro
+      - ./certs:/opt/openfga/certs:ro
+      - ./certs/ca.crt:/etc/openfga/ca.crt:ro
+      - openfga-data:/opt/openfga/data
+    command: ["run"]
+    environment:
+      - SSL_CERT_FILE=/etc/openfga/ca.crt
+    ports:
+      - "28443:28443"  # gRPC (HTTPS)
+      - "18443:18443"  # HTTP API (HTTPS)
+      - "3000:3000"    # Playground
+    networks:
+      - spire-net
+
+  go-client:
+    build: ./client
+    container_name: go-client
+    depends_on:
+      - spire-agent
+      - openfga
+    volumes:
+      - spire-agent-socket:/tmp/spire-agent
+      - ./certs:/opt/certs:ro
+    user: "1000:1000"
+    pid: "container:spire-agent"
+    environment:
+      - OPENFGA_STORE_ID=${OPENFGA_STORE_ID}
+      - OPENFGA_API_URL=${OPENFGA_API_URL:-https://openfga:18443}
+    env_file:
+      - .env
+    networks:
+      - spire-net
+
+volumes:
+  spire-data:
+  spire-agent-socket:
+  spire-server-socket:
+  openfga-data:
+
+networks:
+  spire-net:
+    driver: bridge

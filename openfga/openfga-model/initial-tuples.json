@@ -1,0 +1,82 @@
+{
+  "tuple_keys": [
+    {
+      "_comment": "adminユーザーがbackend-teamの所有者",
+      "user": "user:admin",
+      "relation": "owner",
+      "object": "team:backend-team"
+    },
+    {
+      "_comment": "aliceがbackend-teamの管理者",
+      "user": "user:alice",
+      "relation": "admin",
+      "object": "team:backend-team"
+    },
+    {
+      "_comment": "bobがbackend-teamのメンバー",
+      "user": "user:bob",
+      "relation": "member",
+      "object": "team:backend-team"
+    },
+    {
+      "_comment": "daveもbackend-teamのメンバー",
+      "user": "user:dave",
+      "relation": "member",
+      "object": "team:backend-team"
+    },
+    {
+      "_comment": "backend-teamがsensitive-dataリソースを管理",
+      "user": "team:backend-team",
+      "relation": "team",
+      "object": "resource:sensitive-data"
+    },
+    {
+      "_comment": "adminユーザーがsensitive-dataの直接的な所有者",
+      "user": "user:admin",
+      "relation": "owner",
+      "object": "resource:sensitive-data"
+    },
+    {
+      "_comment": "backend-teamがpublic-dataリソースも管理",
+      "user": "team:backend-team",
+      "relation": "team",
+      "object": "resource:public-data"
+    },
+    {
+      "_comment": "aliceがpublic-dataの書き込み権限を持つ",
+      "user": "user:alice",
+      "relation": "writer",
+      "object": "resource:public-data"
+    },
+    {
+      "_comment": "charlieは外部ユーザーでpublic-dataの読み取りのみ可能",
+      "user": "user:charlie",
+      "relation": "reader",
+      "object": "resource:public-data"
+    },
+    {
+      "_comment": "frontend-teamも作成してpublic-dataにアクセス可能",
+      "user": "user:eve",
+      "relation": "owner",
+      "object": "team:frontend-team"
+    },
+    {
+      "_comment": "frankがfrontend-teamのメンバー",
+      "user": "user:frank",
+      "relation": "member",
+      "object": "team:frontend-team"
+    },
+    {
+      "_comment": "frontend-teamもpublic-dataにアクセス（読み取りのみ）",
+      "user": "team:frontend-team",
+      "relation": "team",
+      "object": "resource:user-interface-config"
+    },
+    {
+      "_comment": "frankがuser-interface-configの編集権限",
+      "user": "user:frank",
+      "relation": "writer",
+      "object": "resource:user-interface-config"
+    }
+  ]
+}

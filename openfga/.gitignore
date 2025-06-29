@@ -1,0 +1,19 @@
+# Generated certificates
+certs/
+
+# SPIRE generated files
+spire-config/agent/bootstrap.crt
+join-token.txt
+
+# Data directories
+spire-data/
+
+# Client build artifacts
+client/client
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
