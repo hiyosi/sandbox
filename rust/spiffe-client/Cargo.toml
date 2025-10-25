@@ -1,0 +1,77 @@
+[package]
+name = "spiffe-client"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70.0"
+authors = ["SPIRE Client Contributors"]
+description = "Rust client library for SPIFFE/SPIRE with mTLS support"
+repository = "https://github.com/hiyosi/spiffe-client-rs"
+license = "Apache-2.0"
+keywords = ["spiffe", "spire", "mtls", "security", "identity"]
+categories = ["authentication", "network-programming", "cryptography"]
+
+[dependencies]
+# Core dependencies
+thiserror = "1.0"
+anyhow = "1.0"
+tracing = "0.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# SPIFFE/SPIRE specific
+url = "2.5"
+x509-cert = "0.2"
+rustls = { version = "0.23", features = ["ring"] }
+tokio-rustls = "0.26"
+webpki-roots = "0.26"
+
+# gRPC for SPIRE agent communication
+tonic = { version = "0.12", features = ["tls", "tls-roots"] }
+prost = "0.13"
+tower = "0.4"
+
+# Async runtime
+tokio = { version = "1.35", features = ["full"] }
+futures = "0.3"
+
+# Time handling
+chrono = { version = "0.4", features = ["serde"] }
+
+# Synchronization
+parking_lot = "0.12"
+
+# HTTP client for certain operations
+reqwest = { version = "0.12", features = ["rustls-tls"], default-features = false }
+
+[dev-dependencies]
+tokio-test = "0.4"
+proptest = "1.4"
+criterion = "0.5"
+tempfile = "3.8"
+wiremock = "0.6"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[build-dependencies]
+tonic-build = "0.12"
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
+strip = true
+
+[profile.bench]
+inherits = "release"
+lto = false
+
+[lib]
+name = "spiffe_client"
+path = "src/lib.rs"
+
+[[example]]
+name = "basic_mtls"
+path = "examples/basic_mtls.rs"
+
+[[example]]
+name = "workload_api"
+path = "examples/workload_api.rs"

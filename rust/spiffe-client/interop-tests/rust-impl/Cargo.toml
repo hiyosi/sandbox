@@ -1,0 +1,25 @@
+[package]
+name = "mtls-interop"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "mtls_server"
+path = "mtls_server.rs"
+
+[[bin]]
+name = "mtls_client"
+path = "mtls_client.rs"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+rustls = "0.23"
+tokio-rustls = "0.26"
+x509-cert = "0.2"
+x509-parser = "0.16"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+anyhow = "1.0"
+rcgen = "0.12"
+pem = "3.0"
+clap = { version = "4", features = ["derive"] }
